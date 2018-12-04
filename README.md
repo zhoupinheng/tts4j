@@ -1,5 +1,5 @@
 # tts4j
-tts4j主要是为了降低Java使用tts的难度。它通过jacob调用windows本身的文字阅读发声。
+tts4j主要是为了降低Java使用tts的难度。它通过jacob调用windows本身的文字阅读服务发声。
 
 使用方法:
 TTS4JUtil.speak(volume,rate,words);
