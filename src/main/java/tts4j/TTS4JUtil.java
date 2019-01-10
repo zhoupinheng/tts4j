@@ -51,12 +51,15 @@ public class TTS4JUtil {
       sap.setProperty("Volume", new Variant(volume));
       sap.setProperty("Rate", new Variant(rate));
 
-      Variant allVoices = Dispatch.call(sapo, "GetVoices");
-      Dispatch dispVoices = allVoices.toDispatch();
-      Dispatch setvoice = Dispatch.call(dispVoices, "Item", new Variant(1)).toDispatch();
-      ActiveXComponent setvoiceActivex = new ActiveXComponent(setvoice);
+      WINTYPE winType = getWinddowsType();
+      if (winType != WINTYPE.WIN7) {
+        Variant allVoices = Dispatch.call(sapo, "GetVoices");
+        Dispatch dispVoices = allVoices.toDispatch();
+        Dispatch setvoice = Dispatch.call(dispVoices, "Item", new Variant(1)).toDispatch();
+        ActiveXComponent setvoiceActivex = new ActiveXComponent(setvoice);
 
-      Dispatch.call(setvoiceActivex, "GetDescription");
+        Dispatch.call(setvoiceActivex, "GetDescription");
+      }
 
       Dispatch.call(sapo, "Speak", new Variant(words));
 
@@ -140,4 +143,31 @@ public class TTS4JUtil {
     }
   }
 
+  private static WINTYPE getWinddowsType() {
+    String osName = System.getProperty("os.name");
+    String version = System.getProperty("os.version");
+
+    if ("Windows 7".equalsIgnoreCase(osName.trim())) {
+      return WINTYPE.WIN7;
+    } else if (osName.startsWith("Windows 8.1")) {
+      return WINTYPE.WIN10;
+    } else {
+      return WINTYPE.WIN8;
+    }
+  }
+
+  enum WINTYPE {
+    WIN7("WIN7"), WIN8("WIN8"), WIN10("WIN10");
+
+    private WINTYPE(String desc) {
+      this.description = desc;
+    }
+
+    public String toString() {
+      return description;
+    }
+
+    private String description;
+  }
+  
 }
